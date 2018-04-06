@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Calculator</title>
+
+</head>
+
+<body>
+	<h3>덧셈 계산기</h3>
+	<form name="myform" action="..." method="POST">
+		첫번째 정수: <input id="x" /><br>
+		두번째 정수: <input id="y" /><br>
+		합계: 		<input id="sum" /><br>	
+		<input type="button" value="계산" onclick="calc();" />
+	</form>
+	
+		<script>
+		// 함수
+		function calc() {
+					// document:내장객체
+					// getElementById: 인자에 입력한 아이디 값으로 엘리먼트를 찾는다
+					// 앨리먼트.value: value의 속성(attribute) 값을 가져온다
+			var x = document.getElementById("x").value;
+			var y = document.getElementById("y").value;
+			var sum;
+			sum = parseInt(x) + parseInt(y);
+			document.getElementById("sum").value = sum;
+		}
+	</script>
+</body>
+</html>

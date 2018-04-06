@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>for in</title>
+</head>
+
+<body>
+	<script>
+		var myCar = {make: "BMW", model: "X5", year: 2013};
+		var txt="";
+		
+		// for/in 루프: Java의 Map 컬렉션에서 ketSet()을 이용하는 방법과 동일
+		for (var x in myCar) {
+			txt += myCar[x] + " ";
+		}
+		
+		document.write(txt);
+	</script>
+
+</body>
+</html>
