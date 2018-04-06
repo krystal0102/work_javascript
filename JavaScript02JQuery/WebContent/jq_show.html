@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<button id="btnShow">Show it</button>
+	<button id="btnToggle">Toggle it</button>
+	<button id="btnAnimate">Animate</button>
+	
+	<img id="joy" src="joy.jpg" alt="" style="display:none" />
+	<img id="joy02" src="joy.jpg" alt="" style="position: relative" />
+	
+	<script src="js/jquery-3.3.1.js"></script>
+	<script>
+		$(document).ready(function() {
+			$("#btnShow").click(function() {
+				$("#joy").show("fast");
+			});
+		});
+		
+		$(document).ready(function() {
+			$("#btnToggle").click(function() {
+				$("#joy").toggle();
+			});
+		})
+		
+		$(document).ready(function() {
+			$("#btnAnimate").click(function() {
+				$("#joy02").animate({ left: '100px', opacity: '0.5', width: '150px' });
+			});
+		})
+	</script>
+</body>
+</html>

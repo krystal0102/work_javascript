@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>회원 신청서</h2>
+	<form action="..." id="formJoin" method="post">
+		<table>
+			<tr>
+				<td>이름*</td>
+				<td><input type="text" id="name" name="name"></td>
+				<td id="nameError"></td>
+			</tr>
+			<tr>
+				<td>성별*</td>
+				<td><label><input type="radio" name="gender" value="0">남성</label>
+					<label><input type="radio" name="gender" value="1">여성</label>
+				</td>
+				<td id="genderError"></td>
+			</tr>
+			<tr>
+				<td>휴대폰 번호Phone*</td>
+				<td><input type="text" id="phone" name="phone"></td>
+				<td id="phoneError"></td>
+			</tr>
+			<tr>
+				<td>이메일*</td>
+				<td><input type="text" id="email" name="email"></td>
+				<td id="emailError"></td>
+			</tr>
+			<tr>
+				<td>패스워드(6-8 글자)*</td>
+				<td><input type="password" id="password" name="password"></td>
+				<td id="passwordError"></td>
+			</tr>
+			<tr>
+				<td>패스워드 검증*</td>
+				<td><input type="password" id="pwConfirm" name="pwConfirm"></td>
+				<td id="pwConfirmError"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="submit" value="제출"> <input
+					type="reset" id="reset" value="지우기"></td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+
+	<script src="js/jquery-3.3.1.js"></script>
+	<script>
+		// 페이지가 로드되면 호출되는 함수 (onload 이벤트 사용)
+		$(document).ready(function() {
+			$("#formJoin").onsubmit = function() {
+				
+			// isNotEmpty 함수를 호출하고 난 결과를 case01 변수에 담는다.
+			var case01 = isNotEmpty('name', '이름을 입력하시오!');
+				
+			// isChecked 함수를 호출하고 난 결과를 case02 변수에 담는다.
+			var case02 = isChecked('gender', '성별을 체크하시오!');
+			
+			var case03 = isNumeric('phone', '올바른 전화번호를 입력하시오!');
+				
+			var case04 = isValidEmail('email', '올바른 이메일을 입력하시오!');
+				
+			// 패스워드의 길이가 6이상 8이하일 경우에 true 리턴, 아니면 false
+			var case05 = isLengthMinMax('password', '패스워드 허용길이 범위를 벗어났습니다!', 6, 8);
+				
+			var case06 = verifyPassword('password', 'pwConfirm', '패스워드가 다릅니다!');
+				
+			// 변수 값을 리턴한다. false이면 제출 버튼 기본동작을 막고, true이면 기본동작 실행
+			return case01 && case02 && case03 && case04 && case05 && case06;
+			};
+		
+		
+		function showMessage(isValid, inputElement, errorMsg, errorElement) {
+			// 공백일 경우
+			if (!isValid) {
+				// 에러 메시지를 표시하는 영역이 존재하면
+				if (errorElement != null) {
+					// 에러 메시지 표시하는 영역에 오류 메시지를 적는다.
+					errorElement.innerHTML = errorMsg;
+				}
+				// 입력받는 앨리먼트가 존재하면
+				if (inputElement != null) {
+					// 입력받는 앨리먼트에 포커스를 준다.
+					inputElement.focus();
+				}
+			
+			// 공백이 아닐 경우
+			} else {
+				// 에러 메시지를 표시하는 영역이 존재하면
+				if (errorElement != null) {
+					// 기존에 출력됐던 에러메시지를 지운다.
+					errorElement.innerHTML = "";
+				}
+			}
+		}
+		
+		// 입력 값이 비어 있지 않으면 true를 리턴한다.
+		function isNotEmpty(inputId, errorMsg) {
+			// inputId 문자열에 해당하는 id값을 가지는 앨리먼트를 객체로 가져온다.
+			var inputElement = $("#inputId");
+			
+			// inputId 문자열 + "Error" 문자열에 해당하는 id값을 가지는 앨리먼트를 객체로 가져온다.
+			var errorElement = document.getElementById(inputId + "Error");
+			
+			// 입력받은 값에서 공백을 제거하여 inputValue 지역변수에 담는다.
+			var inputValue = inputElement.value.trim();
+			
+			// inputValue 값의 길이를 확인하고 0이면 입력하지 않은 것이니 false값을 isValid에 담는다.
+			var isValid = (inputValue.length != 0);
+			
+			showMessage(isValid, inputElement, errorMsg, errorElement);
+			
+			// 공백이면 false, 공백이 아니면 true를 리턴한다. (isValid 값 리턴)
+			return isValid;
+		}
+		
+		// 체크 박스가 체크되었는지를 검사한다.
+		function isChecked(inputName, errorMsg) {
+			/*
+				inputName 문자열을 name 속성으로 가지는 앨리먼트들을 가져온다.
+				라디오 버튼이 2개이기 때문에 Name 속성으로 가져온다.
+			*/
+			var inputElements = document.getElementsByName(inputName);
+			
+			// inputName 문자열 + Error id값을 가지는 앨리먼트를 가져온다.
+			var errorElement = document.getElementById(inputName + "Error");
+			
+			// 라디오 버튼 중 하나가 체크 되었는지 여부를 저장하는 변수 선언 및 초기화
+			var isChecked = false;
+			
+			// 라디오 버튼 개수만큼 for문을 반복
+			for (var i = 0; i < inputElements.length; i++) {
+				if (inputElements[i].checked) {
+					// 하나라도 체크되었다면 체크된 것으로 판단하고 for문 종료
+					isChecked = true;	
+					break;
+				}
+			}
+			showMessage(isChecked, null, errorMsg, errorElement);
+			
+			// 라디오 버튼 중 하나가 체크되었다면 true, 아니면 false
+			return isChecked;
+		}
+		
+		// 모두 숫자로되어 있는지를 검사
+		function isNumeric(inputId, errorMsg) {
+			var inputElement = document.getElementById(inputId);
+			var errorElement = document.getElementById(inputId + "Error");
+			var inputValue = inputElement.value.trim();
+			
+			/*
+				정규식 사용(숫자만 입력됐는지 검사)
+				^: 시작, $: 끝
+				[0-9]+: 숫자 0부터 9까지 하나 이상이 있어야 된다는 표기
+				
+				따라서 ^[0-9]+$ 의 뜻은 시작부터 끝까지 숫자 0부터 9까지의
+				하나 이상 숫자만 허용한다는 뜻
+				
+				작성한 정규식을 match 메소드를 호출할 때 인자로 넘겨주면
+				inputValue의 값을 검증하고 검증한 결과를 true, false로 리턴 받는다.
+			*/
+			var isValid = inputValue.match(/^[0-9]+$/);
+			showMessage(isValid, inputElement, errorMsg, errorElement);
+			
+			// 숫자로만 이루어져 있다면 true, 아니면 false
+			return isValid;
+		}
+		
+		// 유효한 이메일 주소인지를 검증
+		function isValidEmail(inputId, errorMsg) {
+			var inputElement = document.getElementById(inputId);
+			var errorElement = document.getElementById(inputId + "Error");
+			var inputValue = inputElement.value;
+			var isValid = inputValue.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9_\-])+\.)+([a-zA-Z0-9]{2,})+$/);
+			showMessage(isValid, inputElement, errorMsg, errorElement);
+			return isValid;
+		}
+		
+		// 입력의 길이가 minLength와 maxLength 사이에 있으면 true 리턴
+		function isLengthMinMax(inputId, errorMsg, minLength, maxLength) {
+			var inputElement = document.getElementById(inputId);
+			var errorElement = document.getElementById(inputId + "Error");
+			var inputValue = inputElement.value.trim();
+			
+			/*
+				inputValue의 길이가 minLength 값 이상, maxLength 값 이하일
+				경우는 true 아니면 false
+			*/
+			var isValid = (inputValue.length >= minLength)
+						&& (inputValue.length <= maxLength);
+			showMessage(isValid, inputElement, errorMsg, errorElement);
+			return isValid;
+		}
+		
+		// 패스워드를 검증한다.
+		function verifyPassword(pwId, pwConfirmId, errorMsg) {
+			// 패스워드 값을 가져오기 위해 앨리먼트 객체를 가져온다.
+			var pwElement = document.getElementById(pwId);
+			
+			// 패스워드 검증 값을 가져오기 위해 앨리먼트 객체를 가져온다.
+			var pwConfirmElement = document.getElementById(pwConfirmId);
+			var errorElement = document.getElementById(pwConfirmId + "Error");
+			
+			// 패스워드 값과 패스워드 검증 값을 비교하여 같은지 확인
+			var isMatch = (pwElement.value == pwConfirmElement.value);
+			
+			showMessage(isMatch, pwConfirmElement, errorMsg, errorElement);
+			
+			// 같다면 true, 아니면 false
+			return isMatch;
+		}
+		
+		
+		});
+	</script>
+</body>
+</html>
